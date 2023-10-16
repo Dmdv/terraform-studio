@@ -9,6 +9,16 @@ resource "aws_vpc" "prod-vpc" {
   }
 }
 
+# # 1. Create vpc
+
+# resource "aws_vpc" "prod-vpc" {
+#   cidr_block = "10.0.0.0/16"
+#   tags = {
+#     Name = "production"
+#   }
+# }
+
+
 resource "aws_subnet" "subnet-1" {
   vpc_id            = aws_vpc.prod-vpc.id
   cidr_block        = var.subnet_prefix[0].cidr_block
@@ -29,14 +39,6 @@ resource "aws_subnet" "subnet-2" {
   }
 }
 
-# # 1. Create vpc
-
-# resource "aws_vpc" "prod-vpc" {
-#   cidr_block = "10.0.0.0/16"
-#   tags = {
-#     Name = "production"
-#   }
-# }
 
 # # 2. Create Internet Gateway
 
