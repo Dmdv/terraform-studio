@@ -6,9 +6,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "learning-terraform-state-2023"
-    key    = "learning.terraform.tfstate"
-    region = var.aws_region
+    bucket         = "learning.terraform.tf-state.root.ap-east-1"
+    key            = "aws/root/s3/terraform.tfstate"
+    region         = "ap-east-1"
+    encrypt        = true
   }
 }
 
