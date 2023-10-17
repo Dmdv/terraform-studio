@@ -8,10 +8,11 @@ terraform {
   backend "s3" {
     bucket = "learning-terraform-state-2023"
     key    = "learning.terraform.tfstate"
-    region = "ap-east-1"
+    region = var.aws_region
   }
 }
 
 provider "aws" {
-  region  = "ap-east-1"
+  alias  = "hk"
+  region  = var.aws_region
 }
