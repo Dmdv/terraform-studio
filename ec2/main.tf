@@ -54,10 +54,6 @@ resource "aws_security_group_rule" "blog_http_in" {
   cidr_blocks       = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.blog.id
-
-  tags = {
-    Name = "Learning terraform"
-  }
 }
 
 resource "aws_security_group_rule" "blog_https_in" {
@@ -68,10 +64,6 @@ resource "aws_security_group_rule" "blog_https_in" {
   cidr_blocks       = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.blog.id
-
-  tags = {
-    Name = "Learning terraform"
-  }
 }
 
 resource "aws_security_group_rule" "blog_everything_out" {
@@ -82,8 +74,4 @@ resource "aws_security_group_rule" "blog_everything_out" {
   cidr_blocks       = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.blog.id
-
-  tags = {
-    Name = "Learning terraform"
-  }
 }
