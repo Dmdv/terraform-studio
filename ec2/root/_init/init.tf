@@ -28,6 +28,9 @@ terraform {
   }
 }
 
+# On the start, comment the block below and start `terraform init/apply`
+# After the first run, uncomment the block below and start `terraform init/apply` again
+# It will move the state file to the s3 bucket
 terraform {
   backend "s3" {
     encrypt        = true
