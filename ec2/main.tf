@@ -15,7 +15,7 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
-# Information about the VPC
+# Default VPC security group
 data "aws_vpc" "default" {
   default = true
 }
@@ -39,6 +39,10 @@ resource "aws_security_group" "blog" {
   description = "Allow HTTP and HTTPS inbound traffic. And allow all outbound traffic."
 
   vpc_id = data.aws_vpc.default.id
+
+  tags = {
+    Name = "Learning terraform"
+  }
 }
 
 # Create a security group rule
@@ -50,6 +54,10 @@ resource "aws_security_group_rule" "blog_http_in" {
   cidr_blocks       = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.blog.id
+
+  tags = {
+    Name = "Learning terraform"
+  }
 }
 
 resource "aws_security_group_rule" "blog_https_in" {
@@ -60,6 +68,10 @@ resource "aws_security_group_rule" "blog_https_in" {
   cidr_blocks       = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.blog.id
+
+  tags = {
+    Name = "Learning terraform"
+  }
 }
 
 resource "aws_security_group_rule" "blog_everything_out" {
@@ -70,4 +82,8 @@ resource "aws_security_group_rule" "blog_everything_out" {
   cidr_blocks       = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.blog.id
+
+  tags = {
+    Name = "Learning terraform"
+  }
 }
