@@ -26,9 +26,8 @@ resource "aws_instance" "blog" {
   instance_type = var.instance_type
 
   # Associate the instance with the VPC
-  vpc_security_group_ids = [module.security_group_blog.security_group_id]
-  # This is a must
-  subnet_id = module.vpc_blog.public_subnets[0]
+  vpc_security_group_ids = [module.blog_security_group.security_group_id]
+  subnet_id = module.blog_vpc.public_subnets[0] # Required
 
   tags = {
     Name = "Learning terraform"
@@ -37,8 +36,43 @@ resource "aws_instance" "blog" {
 
 # ---- Modules --------------------------------------------------------------------------------
 
+# Create an ALB (load balancer)
+module "blog_alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 6.0"
+
+  name = "blog-alb"
+
+  load_balancer_type = "application"
+
+  vpc_id             = module.blog_vpc.vpc_id
+  subnets            = module.blog_vpc.public_subnets
+  security_groups    = [module.blog_security_group.security_group_id]
+
+  target_groups = [
+    {
+      name_prefix      = "blog-"
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "instance"
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
+    }
+  ]
+
+  tags = {
+    Environment = "dev"
+  }
+}
+
 # Create a VPC
-module "vpc_blog" {
+module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = "dev blog VPC"
@@ -58,13 +92,13 @@ module "vpc_blog" {
 }
 
 # Create a security group
-module "security_group_blog" {
+module "blog_security_group" {
   source = "terraform-aws-modules/security-group/aws"
 
   name        = "blog security group"
   description = "Allow HTTP and HTTPS inbound traffic. And allow all outbound traffic."
 
-  vpc_id      = module.vpc_blog.vpc_id
+  vpc_id      = module.blog_vpc.vpc_id
 
   ingress_rules            = ["http-80-tcp", "https-443-tcp"]
   ingress_cidr_blocks      = ["0.0.0.0/0"]
