@@ -33,10 +33,33 @@ resource "aws_instance" "blog" {
   }
 }
 
+# ---- Modules --------------------------------------------------------------------------------
+
+# Create a VPC
+module "vpc_blog" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "dev blog VPC"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["ap-east-1"]
+  public_subnets = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  # Uncomment this to create a NAT gateway
+  #  enable_nat_gateway = true
+  #  single_vpn_gateway = true
+
+  tags = {
+    Terraform = true,
+    Environment = "dev"
+  }
+}
+
+# Create a security group
 module "security_group_blog" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = "blog"
+  name        = "blog security group"
   description = "Allow HTTP and HTTPS inbound traffic. And allow all outbound traffic."
 
   vpc_id      = data.aws_vpc.default.id
