@@ -27,6 +27,8 @@ resource "aws_instance" "blog" {
 
   # Associate the instance with the VPC
   vpc_security_group_ids = [module.security_group_blog.security_group_id]
+  # This is a must
+  subnet_id = module.vpc_blog.public_subnets[0]
 
   tags = {
     Name = "Learning terraform"
@@ -62,7 +64,7 @@ module "security_group_blog" {
   name        = "blog security group"
   description = "Allow HTTP and HTTPS inbound traffic. And allow all outbound traffic."
 
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = module.vpc_blog.vpc_id
 
   ingress_rules            = ["http-80-tcp", "https-443-tcp"]
   ingress_cidr_blocks      = ["0.0.0.0/0"]
