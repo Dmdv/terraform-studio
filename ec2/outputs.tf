@@ -1,7 +1,7 @@
-output "instance_ami" {
-  value = aws_instance.blog.ami
+output "alb_id" {
+  value = module.blog_alb.lb_id
 }
 
 output "instance_arn" {
-  value = aws_instance.blog.arn
+  value = module.blog_autoscaling.iam_instance_profile_arn
 }
