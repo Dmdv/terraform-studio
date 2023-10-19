@@ -44,7 +44,7 @@ module "vpc_blog" {
   name = "dev blog VPC"
   cidr = "10.0.0.0/16"
 
-  azs             = ["ap-east-1"]
+  azs             = ["ap-east-1a", "ap-east-1b", "ap-east-1c"]
   public_subnets = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   # Uncomment this to create a NAT gateway
