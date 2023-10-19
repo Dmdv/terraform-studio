@@ -26,54 +26,69 @@ resource "aws_instance" "blog" {
   instance_type = var.instance_type
 
   # Associate the instance with the VPC
-  vpc_security_group_ids = [aws_security_group.blog.id]
+  vpc_security_group_ids = [module.security_group_blog.security_group_id]
 
   tags = {
     Name = "Learning terraform"
   }
 }
 
-# Create a security group
-resource "aws_security_group" "blog" {
+module "security_group_blog" {
+  source = "terraform-aws-modules/security-group/aws"
+
   name        = "blog"
   description = "Allow HTTP and HTTPS inbound traffic. And allow all outbound traffic."
 
-  vpc_id = data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.default.id
 
-  tags = {
-    Name = "Learning terraform"
-  }
+  ingress_rules            = ["http-80-tcp", "https-443-tcp"]
+  ingress_cidr_blocks      = ["0.0.0.0/0"]
+
+  egress_rules             = ["all-all"]
+  egress_cidr_blocks       = ["0.0.0.0/0"]
 }
 
-# Create a security group rule for HTTP
-resource "aws_security_group_rule" "blog_http_in" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-
-  security_group_id = aws_security_group.blog.id
-}
-
-# Create a security group rule for HTTPS
-resource "aws_security_group_rule" "blog_https_in" {
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-
-  security_group_id = aws_security_group.blog.id
-}
-
-# Create a security group rule for all out
-resource "aws_security_group_rule" "blog_everything_out" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-
-  security_group_id = aws_security_group.blog.id
-}
+# --------- Create a security group -----------------------------------------------------------
+#resource "aws_security_group" "blog" {
+#  name        = "blog"
+#  description = "Allow HTTP and HTTPS inbound traffic. And allow all outbound traffic."
+#
+#  vpc_id = data.aws_vpc.default.id
+#
+#  tags = {
+#    Name = "Learning terraform"
+#  }
+#}
+#
+## Create a security group rule for HTTP
+#resource "aws_security_group_rule" "blog_http_in" {
+#  type              = "ingress"
+#  from_port         = 80
+#  to_port           = 80
+#  protocol          = "tcp"
+#  cidr_blocks       = ["0.0.0.0/0"]
+#
+#  security_group_id = aws_security_group.blog.id
+#}
+#
+## Create a security group rule for HTTPS
+#resource "aws_security_group_rule" "blog_https_in" {
+#  type              = "ingress"
+#  from_port         = 443
+#  to_port           = 443
+#  protocol          = "tcp"
+#  cidr_blocks       = ["0.0.0.0/0"]
+#
+#  security_group_id = aws_security_group.blog.id
+#}
+#
+## Create a security group rule for all out
+#resource "aws_security_group_rule" "blog_everything_out" {
+#  type              = "egress"
+#  from_port         = 0
+#  to_port           = 0
+#  protocol          = "-1"
+#  cidr_blocks       = ["0.0.0.0/0"]
+#
+#  security_group_id = aws_security_group.blog.id
+#}
