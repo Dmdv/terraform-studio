@@ -90,7 +90,7 @@ module "blog_alb" {
 module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = var.environment.name
+  name = "${var.environment.name}-blog-vpc"
   cidr = "${var.environment.network_prefix}.0.0/16"
 
   azs             = ["ap-east-1a", "ap-east-1b", "ap-east-1c"]
