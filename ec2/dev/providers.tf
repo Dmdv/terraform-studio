@@ -13,7 +13,7 @@ terraform {
 #  }
 }
 
-# provider "aws" {
-#  alias  = "hk"
-#  region  = var.aws_region
-#}
+provider "aws" {
+  alias  = "hk"
+  region  = "ap-east-1"
+}
